@@ -18,6 +18,7 @@ editor: visual
 ```{r}
 library(tidyverse)
 library(ggplot2) # plotting
+library(ggpubr) # for a nice plotting function, but optional
 ```
 
 ## Define the simulation function - same as before
@@ -169,37 +170,3 @@ simulated_data <- make_tea_data(n_total = 100, delta = 2, sigma = 5) %>%
 cor.test(simulated_data$rating_exp_1, simulated_data$rating_exp_2)
 ```
 
-# Bonus: let's compute split-half reliability in one experiment
-
-Go back to the first dataframe you created (before you added experiment number 2) Split it in two halves and correlate the rating scores from each half (hint: you can do this many ways; one way is to use `sample_frac` to get 50% of the dataset, and then `anti_join`, --which is a way of removing a portion of a dataset from a larger data frame--to get the other, independent half)
-
-What drives reliability up or down here? Is it the same thing?
-
-```{r}
-##
-first_half <- this_tea_data %>%
-  group_by(condition) %>%
-  sample_frac(.5)
-
-second_half <- this_tea_data %>%
-  group_by(condition) %>%
-  anti_join(first_half)
-
-split_half_correlation = cor.test(second_half$rating, first_half$rating)
-
-split_half_correlation_out = split_half_correlation$estimate
-```
-
-# Extra sections as reference
-
-## Spearman brown correction for split half reliability
-
-This corrects for the fact that we have fewer items when we split the text
-
-Formula from: https://en.wikipedia.org/wiki/Spearman%E2%80%93Brown_prediction_formula
-
-Hint: to get out the actual value from cor.test, you need to get the `estimate` field from the output
-
-```{r}
-corrected_split_half = (2*split_half_correlation_out) / (1+split_half_correlation_out)
-```
