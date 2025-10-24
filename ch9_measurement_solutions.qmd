@@ -169,4 +169,3 @@ simulated_data <- make_tea_data(n_total = 100, delta = 2, sigma = 5) %>%
 
 cor.test(simulated_data$rating_exp_1, simulated_data$rating_exp_2)
 ```
-
